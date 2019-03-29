@@ -1,0 +1,66 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.5.1-node-browsers
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - v1-dependencies- # fallback to using the latest cache if no exact match is found
+
+      - run:
+          name: Install dependencies
+          command: |
+            bundle install --jobs=8 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
+  deploy_to_test:
+    docker:
+      - image: circleci/ruby:2.5.1-node-browsers
+    steps:
+      - checkout
+
+      - setup_remote_docker
+
+      - run:
+          name: Install Heroku CLI
+          command: |
+            wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+
+      - run:
+          name: Login into Heroku Docker Repository
+          command: |
+            docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+
+      - run:
+          name: Deploy Heroku Docker Container
+          command: |
+            heroku container:push web -a intense-atoll-58642
+            heroku container:release web -a intense-atoll-58642
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /.*/
+      - deploy_to_test:
+          requires: [ build ]
+          filters:
+            branches:
+              only: master
+            tags:
+              ignore: /release-.*/
+          context: heroku-deploy
