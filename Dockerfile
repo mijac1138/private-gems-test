@@ -7,4 +7,4 @@ ADD . /app
 RUN gem install bundler
 RUN bundle install --jobs=8
 
-CMD bundle exec rackup
+CMD bundle exec rackup config.ru -p $PORT -E $RACK_ENV
