@@ -4,6 +4,7 @@ RUN mkdir /app
 WORKDIR /app
 
 ADD . /app
+RUN gem install bundler
 RUN bundle install --jobs=8
 
 CMD bundle exec rackup
