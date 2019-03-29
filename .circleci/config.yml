@@ -13,6 +13,11 @@ jobs:
             - v1-dependencies- # fallback to using the latest cache if no exact match is found
 
       - run:
+          name: Install bundler
+          command: |
+            gem install bundler
+
+      - run:
           name: Install dependencies
           command: |
             bundle install --jobs=8 --retry=3 --path vendor/bundle
