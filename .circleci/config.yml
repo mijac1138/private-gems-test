@@ -68,4 +68,3 @@ workflows:
               only: master
             tags:
               ignore: /release-.*/
-          context: heroku-deploy
