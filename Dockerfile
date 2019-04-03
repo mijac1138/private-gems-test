@@ -5,6 +5,7 @@ WORKDIR /app
 
 ADD . /app
 RUN gem install bundler
+RUN bundle config $GIT_HUB_PRIVATE_GEMS_REPO $TEST_TOKEN
 RUN bundle install --jobs=8
 
 CMD bundle exec rackup config.ru -p $PORT -E $RACK_ENV
