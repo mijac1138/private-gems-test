@@ -34,17 +34,11 @@ jobs:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
 
-      - persist_to_workspace:
-          root: .
-          paths: vendor/bundle
-
   deploy_to_test:
     docker:
       - image: circleci/ruby:2.6.1-node-browsers
     steps:
       - checkout
-      - attach_workspace:
-          at: "./"
       - setup_remote_docker
 
       - run:
@@ -56,11 +50,12 @@ jobs:
           name: Login into Heroku Docker Repository
           command: |
             docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
+            docker build --rm=false -t registry.heroku.com/APP_NAME/web .
 
       - run:
           name: Deploy Heroku Docker Container
           command: |
-            heroku container:push web -a intense-atoll-58642
+            heroku container:push web -a intense-atoll-58642 --arg TEST_TOKEN=$TEST_TOKEN, GIT_HUB_PRIVATE_GEMS_REPO=$GIT_HUB_PRIVATE_GEMS_REPO
             heroku container:release web -a intense-atoll-58642
 
 workflows:
