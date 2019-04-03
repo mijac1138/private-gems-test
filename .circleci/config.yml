@@ -5,7 +5,6 @@ jobs:
       - image: circleci/ruby:2.6.1-node-browsers
         environment:
           GIT_HUB_PRIVATE_GEMS_REPO: "https://github.com/mijac1138/private-gem-test"
-          TEST_TOKEN: "50c05f72bc9552b6900c5751930575f3b74ed264:x-oauth-basic"
 
     steps:
       - checkout
