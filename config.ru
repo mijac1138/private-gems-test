@@ -1,9 +1,9 @@
 require "rubygems"
 require "geminabox"
-require 'dotenv/load'
+require 'one'
 
-use Rack::Auth::Basic do |username, password|
-  username == ENV['BASIC_USERNAME'] && password == ENV['BASIC_PASS']
-end
+puts '+' * 30
+puts One.test
+puts '+' * 30
 
 run Geminabox::Server
