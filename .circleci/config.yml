@@ -43,6 +43,8 @@ jobs:
       - image: circleci/ruby:2.6.1-node-browsers
     steps:
       - checkout
+      - attach_workspace:
+        at: /tmp/workspace
       - setup_remote_docker
 
       - run:
