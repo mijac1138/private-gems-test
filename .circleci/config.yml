@@ -50,7 +50,6 @@ jobs:
           name: Login into Heroku Docker Repository
           command: |
             docker login --username=$HEROKU_LOGIN --password=$HEROKU_API_KEY registry.heroku.com
-            docker build --rm=false -t registry.heroku.com/APP_NAME/web .
 
       - run:
           name: Deploy Heroku Docker Container

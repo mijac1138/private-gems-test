@@ -10,8 +10,6 @@ ARG TEST_TOKEN
 ENV TEST_TOKEN=$TEST_TOKEN
 
 ADD . /app
-RUN echo $env_var_name
-
 
 RUN gem install bundler
 RUN bundle config $GIT_HUB_PRIVATE_GEMS_REPO $TEST_TOKEN
