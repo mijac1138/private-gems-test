@@ -34,11 +34,24 @@ jobs:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
 
+      - run:
+          name: Extract Binary from build results
+          command: |
+            mkdir -p circleci_build
+            cp -r ./* ./circleci_build
+
+      - persist_to_workspace:
+          root: circleci_build
+          paths:
+            - /*
+
   deploy_to_test:
     docker:
       - image: circleci/ruby:2.6.1-node-browsers
     steps:
       - checkout
+      - attach_workspace:
+        at: circleci_build
 
       - setup_remote_docker
 
